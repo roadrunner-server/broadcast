@@ -92,11 +92,11 @@ func (p *Plugin) Publish(m *pubsub.Message) error {
 				return errors.E(op, err)
 			}
 		}
+
 		return nil
-	} else {
-		p.log.Warn("no publishers was registered")
 	}
 
+	p.log.Warn("no publishers was registered")
 	return nil
 }
 
@@ -125,7 +125,7 @@ func (p *Plugin) GetDriver(key string) (pubsub.SubReader, error) {
 	const op = errors.Op("broadcast_plugin_get_driver")
 
 	// choose a driver
-	if val, ok := p.cfg.Data[key]; ok {
+	if val, ok := p.cfg.Data[key]; ok { //nolint:nestif
 		// check type of the v
 		// should be a map[string]interface{}
 		switch t := val.(type) {
