@@ -2,8 +2,8 @@ package broadcast
 
 import (
 	"github.com/roadrunner-server/api/v2/plugins/pubsub"
-	websocketsv1 "github.com/roadrunner-server/api/v2/proto/websockets/v1beta"
 	"github.com/roadrunner-server/errors"
+	websocketsProto "go.buf.build/protocolbuffers/go/roadrunner-server/api/proto/websockets/v1"
 	"go.uber.org/zap"
 )
 
@@ -15,7 +15,7 @@ type rpc struct {
 
 // Publish ... msg is a protobuf decoded payload
 // see: root/proto
-func (r *rpc) Publish(in *websocketsv1.Request, out *websocketsv1.Response) error {
+func (r *rpc) Publish(in *websocketsProto.Request, out *websocketsProto.Response) error {
 	const op = errors.Op("broadcast_publish")
 
 	// just return in case of nil message
@@ -54,7 +54,7 @@ func (r *rpc) Publish(in *websocketsv1.Request, out *websocketsv1.Response) erro
 
 // PublishAsync ...
 // see: root/proto
-func (r *rpc) PublishAsync(in *websocketsv1.Request, out *websocketsv1.Response) error {
+func (r *rpc) PublishAsync(in *websocketsProto.Request, out *websocketsProto.Response) error {
 	// just return in case of nil message
 	if in == nil {
 		out.Ok = false
