@@ -23,5 +23,5 @@ priority local -> global
 
 // Config ...
 type Config struct {
-	Data map[string]interface{} `mapstructure:"broadcast"`
+	Data map[string]any `mapstructure:"broadcast"`
 }

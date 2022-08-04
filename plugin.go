@@ -65,8 +65,8 @@ func (p *Plugin) Stop() error {
 	return nil
 }
 
-func (p *Plugin) Collects() []interface{} {
-	return []interface{}{
+func (p *Plugin) Collects() []any {
+	return []any{
 		p.CollectPublishers,
 	}
 }
@@ -127,10 +127,10 @@ func (p *Plugin) GetDriver(key string) (pubsub.SubReader, error) {
 	// choose a driver
 	if val, ok := p.cfg.Data[key]; ok { //nolint:nestif
 		// check type of the v
-		// should be a map[string]interface{}
+		// should be a map[string]any
 		switch t := val.(type) {
 		// correct type
-		case map[string]interface{}:
+		case map[string]any:
 			if _, ok := t[driver]; !ok {
 				panic(errors.E(op, errors.Errorf("could not find mandatory driver field in the %s storage", val)))
 			}
@@ -141,7 +141,7 @@ func (p *Plugin) GetDriver(key string) (pubsub.SubReader, error) {
 		// config key for the particular sub-driver broadcast.memcached.config
 		configKey := fmt.Sprintf("%s.%s.%s", PluginName, key, conf)
 
-		drName := val.(map[string]interface{})[driver]
+		drName := val.(map[string]any)[driver]
 
 		// driver name should be a string
 		if drStr, ok := drName.(string); ok {
@@ -183,7 +183,7 @@ func (p *Plugin) GetDriver(key string) (pubsub.SubReader, error) {
 	return nil, errors.E(op, errors.Str("could not find driver by provided key"))
 }
 
-func (p *Plugin) RPC() interface{} {
+func (p *Plugin) RPC() any {
 	return &rpc{
 		plugin: p,
 		log:    p.log,
