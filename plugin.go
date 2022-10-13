@@ -84,7 +84,7 @@ func (p *Plugin) CollectPublishers(name endure.Named, constructor pubsub.Constru
 }
 
 // Publish is an entry point to the websocket PUBSUB
-func (p *Plugin) Publish(m *pubsub.Msg) error {
+func (p *Plugin) Publish(m pubsub.Message) error {
 	p.Lock()
 	defer p.Unlock()
 
@@ -106,7 +106,7 @@ func (p *Plugin) Publish(m *pubsub.Msg) error {
 	return nil
 }
 
-func (p *Plugin) PublishAsync(m *pubsub.Msg) {
+func (p *Plugin) PublishAsync(m pubsub.Message) {
 	// TODO(rustatian) channel here?
 	go func() {
 		p.Lock()
