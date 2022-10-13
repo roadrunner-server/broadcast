@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/roadrunner-server/api/v2/plugins/config"
-	"github.com/roadrunner-server/api/v2/plugins/pubsub"
 	endure "github.com/roadrunner-server/endure/pkg/container"
 	"github.com/roadrunner-server/errors"
+	"github.com/roadrunner-server/sdk/v3/plugins/pubsub"
 	"go.uber.org/zap"
 )
 
@@ -20,11 +19,18 @@ const (
 	conf string = "config"
 )
 
+type Configurer interface {
+	// UnmarshalKey takes a single key and unmarshal it into a Struct.
+	UnmarshalKey(name string, out any) error
+	// Has checks if config section exists.
+	Has(name string) bool
+}
+
 type Plugin struct {
 	sync.RWMutex
 
 	cfg       *Config
-	cfgPlugin config.Configurer
+	cfgPlugin Configurer
 	log       *zap.Logger
 	// publishers implement Publisher interface
 	// and able to receive a payload
@@ -32,7 +38,7 @@ type Plugin struct {
 	constructors map[string]pubsub.Constructor
 }
 
-func (p *Plugin) Init(cfg config.Configurer, log *zap.Logger) error {
+func (p *Plugin) Init(cfg Configurer, log *zap.Logger) error {
 	const op = errors.Op("broadcast_plugin_init")
 	if !cfg.Has(PluginName) {
 		return errors.E(op, errors.Disabled)
@@ -78,7 +84,7 @@ func (p *Plugin) CollectPublishers(name endure.Named, constructor pubsub.Constru
 }
 
 // Publish is an entry point to the websocket PUBSUB
-func (p *Plugin) Publish(m *pubsub.Message) error {
+func (p *Plugin) Publish(m *pubsub.Msg) error {
 	p.Lock()
 	defer p.Unlock()
 
@@ -100,7 +106,7 @@ func (p *Plugin) Publish(m *pubsub.Message) error {
 	return nil
 }
 
-func (p *Plugin) PublishAsync(m *pubsub.Message) {
+func (p *Plugin) PublishAsync(m *pubsub.Msg) {
 	// TODO(rustatian) channel here?
 	go func() {
 		p.Lock()

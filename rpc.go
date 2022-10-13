@@ -1,8 +1,8 @@
 package broadcast
 
 import (
-	"github.com/roadrunner-server/api/v2/plugins/pubsub"
 	"github.com/roadrunner-server/errors"
+	"github.com/roadrunner-server/sdk/v3/plugins/pubsub"
 	websocketsProto "go.buf.build/protocolbuffers/go/roadrunner-server/api/proto/websockets/v1"
 	"go.uber.org/zap"
 )
@@ -35,9 +35,9 @@ func (r *rpc) Publish(in *websocketsProto.Request, out *websocketsProto.Response
 				continue
 			}
 
-			tmp := &pubsub.Message{
-				Topic:   in.GetMessages()[i].GetTopics()[j],
-				Payload: in.GetMessages()[i].GetPayload(),
+			tmp := &pubsub.Msg{
+				Topic_:   in.GetMessages()[i].GetTopics()[j],
+				Payload_: in.GetMessages()[i].GetPayload(),
 			}
 
 			err := r.plugin.Publish(tmp)
@@ -73,9 +73,9 @@ func (r *rpc) PublishAsync(in *websocketsProto.Request, out *websocketsProto.Res
 				continue
 			}
 
-			tmp := &pubsub.Message{
-				Topic:   in.GetMessages()[i].GetTopics()[j],
-				Payload: in.GetMessages()[i].GetPayload(),
+			tmp := &pubsub.Msg{
+				Topic_:   in.GetMessages()[i].GetTopics()[j],
+				Payload_: in.GetMessages()[i].GetPayload(),
 			}
 
 			r.plugin.PublishAsync(tmp)
