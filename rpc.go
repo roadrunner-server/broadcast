@@ -3,7 +3,7 @@ package broadcast
 import (
 	"github.com/roadrunner-server/errors"
 	"github.com/roadrunner-server/sdk/v3/plugins/pubsub"
-	websocketsProto "go.buf.build/protocolbuffers/go/roadrunner-server/api/proto/websockets/v1"
+	websocketsProto "go.buf.build/protocolbuffers/go/roadrunner-server/api/websockets/v1"
 	"go.uber.org/zap"
 )
 
